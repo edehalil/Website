@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+    <form action="/admin/login" method="post" style="text-align: center;">
+        <h2>Admin Login</h2>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <button type="submit">Login</button>
+        </div>
+        <div style="margin-top: 10px;">
+            <a href="/admin/register">Click to Register</a> | <a href="/admin/forget">Forgot Password?</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

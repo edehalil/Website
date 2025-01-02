@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            overflow-y: scroll;
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+            background-color: var(--body-bg-color);
+            color: var(--body-text-color);
+        }
+        .transition {
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .dark-theme {
+            --body-bg-color: #121212;
+            --body-text-color: #ffffff;
+            --sidebar-bg-color: #333;
+            --sidebar-link-color: #ffffff;
+            --sidebar-link-hover-color: #cccccc;
+            --button-bg-color: #333;
+            --button-text-color: #ffffff;
+        }
+        .light-theme {
+            --body-bg-color: #ffffff;
+            --body-text-color: #000000;
+            --sidebar-bg-color: #111;
+            --sidebar-link-color: #ffffff;
+            --sidebar-link-hover-color: #f1f1f1;
+            --button-bg-color: #111;
+            --button-text-color: #ffffff;
+        }
+        .sidebar {
+            height: calc(100% - 120px);
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 60px;
+            left: 0;
+            background-color: var(--sidebar-bg-color);
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            padding-bottom: 60px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            box-sizing: border-box;
+        }
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 16px;
+            color: var(--sidebar-link-color);
+            display: block;
+            transition: 0.3s;
+        }
+        .sidebar a:hover {
+            color: var(--sidebar-link-hover-color);
+        }
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+            padding: 10px 15px;
+            border: none;
+            position: fixed;
+            top: 70px;
+            left: -40px; /* Partially off-screen */
+            border-radius: 10px;
+            transition: left 0.5s;
+        }
+        .openbtn:hover,
+        .openbtn:focus {
+            left: 10px; /* Move to visible position on hover */
+        }
+        .homebtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: var(--button-bg-color);
+            color: var(--button-text-color);
+            padding: 10px 15px;
+            border: none;
+            position: fixed;
+            top: 10px;
+            left: -40px; /* Partially off-screen */
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: left 0.5s;
+        }
+        .homebtn:hover,
+        .homebtn:focus {
+            left: 10px; /* Move to visible position on hover */
+        }
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .theme-switch {
+            display: inline-block;
+            height: 34px;
+            position: relative;
+            width: 60px;
+        }
+        .theme-switch input {
+            display: none;
+        }
+        .slider {
+            background-color: #ccc;
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            background-color: transparent;
+            bottom: 4px;
+            content: "☀️"; /* Sun emoji */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            height: 26px;
+            left: 4px;
+            position: absolute;
+            transition: .4s;
+            width: 26px;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+            content: "🌙"; /* Moon emoji */
+        }
+        .main {
+            padding: 16px;
+            text-align: center;
+        }
+        .footer {
+            position: absolute;
+            font-size: 12px;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-style: italic;
+            color: var(--body-text-color);
+        }
+        /* Custom scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 6px;
+            border: 3px solid #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="light-theme" onload="applyTheme()">
+
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">←</a>
+    <a href="/urunlerimiz">Ürünlerimiz</a>
+    <a href="/projelerimiz">Projelerimiz</a>
+    <a href="/en_yakin_magaza">En Yakın Mağaza</a>
+    <a href="/hakkimizda">Hakkımızda</a>
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onchange="toggleTheme()">
+            <span class="slider"></span>
+        </label>
+    </div>
+    <div class="footer">made by xRinks</div>
+</div>
+
+<div id="main">
+    <a href="/"><button class="homebtn">🏠</button></a>
+    <button class="openbtn" onclick="openNav()">→</button>
+    {% block content %}{% endblock %}
+</div>
+
+<script>
+    function openNav() {
+        document.getElementById("mySidebar").style.width = "200px";
+    }
+
+    function closeNav() {
+        document.getElementById("mySidebar").style.width = "0";
+    }
+
+    function toggleTheme() {
+        document.body.classList.add('transition');
+        document.body.classList.toggle('dark-theme');
+        document.body.classList.toggle('light-theme');
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+        } else {
+            localStorage.setItem('theme', 'light');
+        }
+    }
+
+    function applyTheme() {
+        const theme = localStorage.getItem('theme');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+            document.getElementById('checkbox').checked = true;
+        } else {
+            document.body.classList.add('light-theme');
+            document.body.classList.remove('dark-theme');
+        }
+    }
+
+    applyTheme(); // Apply theme immediately without transition
+</script>
+
+</body>
+</html>

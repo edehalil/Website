@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Forgot Password{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+    <form action="/admin/forget" method="post" style="text-align: center;">
+        <h2>Forgot Password</h2>
+        <div>
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+        </div>
+        <div>
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

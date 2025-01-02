@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block title %}En Yakın Mağaza{% endblock %}
+
+{% block content %}
+<div id="location-error" style="display: none; text-align: center; margin-top: 20px;">
+    <h2>Özür dileriz, konumunuzu paylaşmadınız.</h2>
+    <button id="request-location-btn" style="margin-top: 10px;">Konuma İzin Ver</button>
+    <p>Lütfen konumunuzu manuel olarak girin:</p>
+    <form id="manual-location-form" style="margin-top: 10px;">
+        <label for="latitude">Enlem:</label>
+        <input type="text" id="latitude" name="latitude" required>
+        <label for="longitude">Boylam:</label>
+        <input type="text" id="longitude" name="longitude" required>
+        <button type="submit">Konumu Kullan</button>
+    </form>
+</div>
+<div id="location-content" style="display: none; display: flex; flex-direction: row; justify-content: space-between; padding: 20px;">
+    <div style="width: 60%; margin-left: 200px;">
+        <div id="map" style="width: 100%; height: 500px;"></div>
+        <button id="set-location-btn" style="margin-top: 10px; display: block; margin-left: auto; margin-right: auto;">Konumu Ayarla</button>
+        <div class="mode-switch-wrapper" style="display: flex; justify-content: center; margin-top: 10px;">
+            <label class="mode-switch" for="mode-checkbox">
+                <input type="checkbox" id="mode-checkbox" onchange="toggleMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+    <div id="store-list" style="width: 35%; display: flex; flex-direction: column; gap: 10px;">
+        <!-- Store cards will be dynamically added here -->
+    </div>
+</div>
+
+<script>
+    let map;
+    let userLocation;
+    let routeLayer;
+    let marker;
+    let settingLocation = false;
+    let travelMode = 'walking';
+
+    function showError() {
+        document.getElementById('location-error').style.display = 'block';
+    }
+
+    function showContent() {
+        document.getElementById('location-content').style.display = 'flex';
+    }
+
+    function createStoreCard(store) {
+        const card = document.createElement('div');
+        card.style.border = '1px solid #ccc';
+        card.style.borderRadius = '10px';
+        card.style.padding = '10px';
+        card.style.backgroundColor = '#f9f9f9';
+        card.style.color = 'black'; // Ensure text is visible in dark theme
+        card.style.cursor = 'pointer';
+
+        const name = document.createElement('h3');
+        name.textContent = store.name;
+        card.appendChild(name);
+
+        const address = document.createElement('p');
+        address.textContent = `${store.address}`;
+        card.appendChild(address);
+
+        const distance = document.createElement('p');
+        distance.textContent = `Mesafe: ${store.distance.toFixed(2)} km`;
+        card.appendChild(distance);
+
+        const hours = document.createElement('p');
+        hours.textContent = `Çalışma Saatleri: ${store.hours}`;
+        card.appendChild(hours);
+
+        const link = document.createElement('a');
+        link.href = `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lng}`;
+        link.target = '_blank';
+        link.textContent = 'Google Haritalar\'da Gör';
+        card.appendChild(link);
+
+        card.addEventListener('click', () => {
+            drawRoute(store.lat, store.lng);
+        });
+
+        return card;
+    }
+
+    function displayStores(stores) {
+        const storeList = document.getElementById('store-list');
+        storeList.innerHTML = ''; // Clear previous stores
+        stores.forEach(store => {
+            const card = createStoreCard(store);
+            storeList.appendChild(card);
+        });
+    }
+
+    function initMap(lat, lng) {
+        userLocation = [lat, lng];
+        map = L.map('map').setView(userLocation, 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        marker = L.marker(userLocation, { draggable: true }).addTo(map)
+            .bindPopup('Your Location')
+            .openPopup();
+
+        marker.on('dragend', function(event) {
+            if (settingLocation) {
+                const position = marker.getLatLng();
+                userLocation = [position.lat, position.lng];
+                fetchNearbyStores(userLocation[0], userLocation[1]);
+                settingLocation = false;
+                map.off('click');
+            } else {
+                marker.setLatLng(userLocation).update();
+            }
+        });
+
+        fetchNearbyStores(userLocation[0], userLocation[1]);
+    }
+
+    function drawRoute(lat, lng) {
+        if (routeLayer) {
+            map.removeControl(routeLayer);
+        }
+
+        routeLayer = L.Routing.control({
+            waypoints: [
+                L.latLng(userLocation[0], userLocation[1]),
+                L.latLng(lat, lng)
+            ],
+            createMarker: function() { return null; },
+            routeWhileDragging: false,
+            addWaypoints: false,
+            draggableWaypoints: false,
+            fitSelectedRoutes: true,
+            show: false,
+            router: L.Routing.osrmv1({
+                profile: travelMode === 'walking' ? 'foot' : 'car'
+            })
+        }).addTo(map);
+    }
+
+    function fetchNearbyStores(lat, lng) {
+        const overpassUrl = `https://overpass-api.de/api/interpreter?data=[out:json];node(around:2000,${lat},${lng})[shop=supermarket];out;`;
+        fetch(overpassUrl)
+            .then(response => response.json())
+            .then(data => {
+                const stores = data.elements.map(store => ({
+                    name: store.tags.name || 'Supermarket',
+                    address: `${store.tags['addr:city'] || 'Şehir bilgisi yok'}, ${store.tags['addr:suburb'] || 'İlçe bilgisi yok'}`,
+                    distance: getDistanceFromLatLonInKm(lat, lng, store.lat, store.lon),
+                    hours: store.tags.opening_hours || '08:00 - 22:00', // Example hours, you can update this with real data if available
+                    link: `https://www.google.com/maps/search/?api=1&query=${store.lat},${store.lon}`,
+                    lat: store.lat,
+                    lng: store.lon
+                })).filter(store => store.distance <= 2); // Filter stores within 2 km
+                displayStores(stores);
+            })
+            .catch(error => console.error('Error fetching nearby stores:', error));
+    }
+
+    function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = deg2rad(lat2 - lat1);
+        const dLon = deg2rad(lon2 - lon1);
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const d = R * c; // Distance in km
+        return d;
+    }
+
+    function deg2rad(deg) {
+        return deg * (Math.PI / 180);
+    }
+
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                showContent();
+                initMap(position.coords.latitude, position.coords.longitude);
+            }, showError, { enableHighAccuracy: true });
+        } else {
+            showError();
+        }
+    }
+
+    function requestLocation() {
+        getLocation();
+    }
+
+    function toggleMode() {
+        travelMode = document.getElementById('mode-checkbox').checked ? 'driving' : 'walking';
+    }
+
+    document.getElementById('manual-location-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const lat = parseFloat(document.getElementById('latitude').value);
+        const lng = parseFloat(document.getElementById('longitude').value);
+        showContent();
+        initMap(lat, lng);
+    });
+
+    document.getElementById('set-location-btn').addEventListener('click', function() {
+        settingLocation = true;
+        map.once('click', function(e) {
+            const { lat, lng } = e.latlng;
+            userLocation = [lat, lng];
+            marker.setLatLng(userLocation).update();
+            fetchNearbyStores(userLocation[0], userLocation[1]);
+            settingLocation = false;
+        });
+    });
+
+    document.getElementById('request-location-btn').addEventListener('click', requestLocation);
+
+    window.onload = getLocation;
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
+<style>
+    .mode-switch-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    .mode-switch {
+        display: inline-block;
+        height: 34px;
+        position: relative;
+        width: 60px;
+    }
+    .mode-switch input {
+        display: none;
+    }
+    .slider {
+        background-color: #ccc;
+        bottom: 0;
+        cursor: pointer;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: .4s;
+        border-radius: 34px;
+    }
+    .slider:before {
+        background-color: transparent;
+        bottom: 4px;
+        content: "🚶";
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        height: 26px;
+        left: 4px;
+        position: absolute;
+        transition: .4s;
+        width: 26px;
+    }
+    input:checked + .slider {
+        background-color: #2196F3;
+    }
+    input:checked + .slider:before {
+        transform: translateX(26px);
+        content: "🚗";
+    }
+</style>
+{% endblock %}

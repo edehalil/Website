@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Ana Sayfa{% endblock %}
+
+{% block content %}
+<div class="home-container">
+    <div class="hero-section">
+        <div class="hero-text">
+            <h1>Geleceği Şekillendiriyoruz</h1>
+            <p>Teknolojik atılımlar ve yenilikçi çözümlerle dünyayı değiştiriyoruz.</p>
+            <a href="/projelerimiz" class="hero-button">Projelerimizi Keşfedin</a>
+        </div>
+    </div>
+    <div class="features-section">
+        <h2>Öne Çıkan Özellikler</h2>
+        <div class="features-cards">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <!-- Feature icon -->
+                </div>
+                <div class="feature-description">
+                    <h3>Yenilikçi Teknolojiler</h3>
+                    <p>En son teknolojilerle donatılmış ürünler ve hizmetler sunuyoruz.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <!-- Feature icon -->
+                </div>
+                <div class="feature-description">
+                    <h3>Global Erişim</h3>
+                    <p>Dünyanın dört bir yanındaki müşterilerimize hizmet veriyoruz.</p>
+                </div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <!-- Feature icon -->
+                </div>
+                <div class="feature-description">
+                    <h3>Güvenilirlik</h3>
+                    <p>Güvenilir ve kaliteli çözümler sunarak müşteri memnuniyetini sağlıyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="about-section">
+        <h2>Hakkımızda</h2>
+        <p>Şirketimiz hakkında daha fazla bilgi edinin ve misyonumuzu, vizyonumuzu ve değerlerimizi keşfedin.</p>
+        <a href="/hakkimizda" class="about-button">Daha Fazla Bilgi</a>
+    </div>
+    <div class="contact-section">
+        <h2>İletişim</h2>
+        <p>Bizimle iletişime geçmek için aşağıdaki bilgileri kullanabilirsiniz.</p>
+        <p>Adres: Örnek Adres, Şehir, Ülke</p>
+        <p>Telefon: +90 123 456 7890</p>
+        <p>Email: info@ornek.com</p>
+    </div>
+</div>
+
+<style>
+    .home-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+    .hero-section {
+        width: 100%;
+        height: 400px;
+        background-color: var(--hero-bg-color); /* Placeholder for hero image */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .hero-text {
+        max-width: 600px;
+        color: black; /* Set hero text color to black */
+    }
+    .hero-text h1 {
+        font-size: 2.5em;
+        margin-bottom: 20px;
+        color: black;
+    }
+    .hero-text p {
+        font-size: 1.2em;
+        margin-bottom: 20px;
+        color: black;
+    }
+    .hero-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+        text-decoration: none;
+        font-size: 1em;
+        cursor: pointer;
+    }
+    .hero-button:hover {
+        background-color: var(--button-hover-bg-color);
+    }
+    .features-section {
+        width: 100%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .features-section h2 {
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+    .features-cards {
+        display: flex;
+        justify-content: space-around;
+    }
+    .feature-card {
+        width: 30%;
+        background-color: var(--card-bg-color);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        color: var(--card-text-color);
+    }
+    .feature-icon {
+        width: 100px;
+        height: 100px;
+        background-color: var(--icon-bg-color); /* Placeholder for feature icon */
+        margin: 0 auto 20px;
+        border-radius: 50%;
+    }
+    .about-section {
+        width: 100%;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+    .about-section h2 {
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+    .about-section p {
+        margin-bottom: 20px;
+        color: var(--text-color);
+        text-align: center; /* Center align text */
+    }
+    .about-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+        text-decoration: none;
+        font-size: 1em;
+        cursor: pointer;
+    }
+    .about-button:hover {
+        background-color: var(--button-hover-bg-color);
+    }
+    .contact-section {
+        width: 100%;
+        text-align: center;
+    }
+    .contact-section h2 {
+        margin-bottom: 20px;
+        color: var(--text-color);
+    }
+    .contact-section p {
+        color: var(--text-color);
+        text-align: center; /* Center align text */
+    }
+    :root {
+        --hero-bg-color: #e0e0e0;
+        --text-color: #e0e0e0;
+        --button-bg-color: #007bff;
+        --button-text-color: #fff;
+        --button-hover-bg-color: #0056b3;
+        --card-bg-color: #f9f9f9;
+        --card-text-color: #333;
+        --icon-bg-color: #ccc;
+    }
+    .dark-theme :root {
+        --hero-bg-color: #444;
+        --text-color:rgb(241, 241, 241);
+        --button-bg-color: #007bff;
+        --button-text-color: #fff;
+        --button-hover-bg-color: #0056b3;
+        --card-bg-color: #333;
+        --card-text-color:rgb(241, 241, 241);
+        --icon-bg-color: #555;
+    }
+</style>
+{% endblock %}
