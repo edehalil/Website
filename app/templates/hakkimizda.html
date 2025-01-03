@@ -110,10 +110,10 @@
     }
     .company-details h1 {
         margin-bottom: 10px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .company-details p {
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .main-themes {
         width: 100%;
@@ -122,7 +122,7 @@
     .main-themes h2 {
         text-align: center;
         margin-bottom: 20px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .theme-cards {
         display: flex;
@@ -143,10 +143,10 @@
         margin-bottom: 10px;
     }
     .theme-description h3 {
-        color: var(--card-text-color);
+        color: var(--theme-description-text-color); /* Use body text color */
     }
     .theme-description p {
-        color: var(--card-text-color);
+        color: var(--theme-description-text-color); /* Use theme description text color */
     }
     .links-section {
         width: 100%;
@@ -155,7 +155,7 @@
     .links-section h2 {
         text-align: center;
         margin-bottom: 10px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .links-section ul {
         list-style-type: none;
@@ -177,10 +177,10 @@
     .contact-section h2 {
         text-align: center;
         margin-bottom: 10px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .contact-section p {
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .faq-section {
         width: 100%;
@@ -188,45 +188,31 @@
     .faq-section h2 {
         text-align: center;
         margin-bottom: 10px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .faq-item h3 {
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .faq-item p {
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     :root {
         --header-bg-color: #e0e0e0;
         --profile-bg-color: #ccc;
-        --text-color: #ffffff;
+        --body-text-color: #000000; /* Default text color for light theme */
         --card-bg-color: #f9f9f9;
-        --card-text-color: #333;
         --theme-bg-color: #ccc;
         --link-color: #007bff;
+        --theme-description-text-color: #000000; /* Black text for light theme */
     }
     .dark-theme :root {
         --header-bg-color: #444;
         --profile-bg-color: #555;
-        --text-color: #ffffff;
+        --body-text-color: #ffffff; /* Default text color for dark theme */
         --card-bg-color: #333;
-        --card-text-color: #000000;
         --theme-bg-color: #555;
         --link-color: #007bff;
-    }
-    .dark-theme .company-details h1,
-    .dark-theme .company-details p,
-    .dark-theme .links-section h2,
-    .dark-theme .contact-section h2,
-    .dark-theme .contact-section p,
-    .dark-theme .faq-section h2,
-    .dark-theme .faq-item h3,
-    .dark-theme .faq-item p {
-        color:rgb(255, 255, 255);
-    }
-    .dark-theme .theme-description h3,
-    .dark-theme .theme-description p{
-        color:rgb(74, 74, 74);
+        --theme-description-text-color: #ffffff; /* White text for dark theme */
     }
 </style>
 {% endblock %}

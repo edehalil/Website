@@ -76,17 +76,17 @@
     }
     .hero-text {
         max-width: 600px;
-        color: black; /* Set hero text color to black */
+        color: var(--body-text-color); /* Use body text color */
     }
     .hero-text h1 {
         font-size: 2.5em;
         margin-bottom: 20px;
-        color: black;
+        color: var(--body-text-color); /* Use body text color */
     }
     .hero-text p {
         font-size: 1.2em;
         margin-bottom: 20px;
-        color: black;
+        color: var(--body-text-color); /* Use body text color */
     }
     .hero-button {
         padding: 10px 20px;
@@ -108,7 +108,7 @@
     }
     .features-section h2 {
         margin-bottom: 20px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .features-cards {
         display: flex;
@@ -121,7 +121,7 @@
         border-radius: 10px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         text-align: center;
-        color: var(--card-text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .feature-icon {
         width: 100px;
@@ -130,6 +130,9 @@
         margin: 0 auto 20px;
         border-radius: 50%;
     }
+    .feature-description h3, .feature-description p {
+        color: var(--feature-text-color);
+    }
     .about-section {
         width: 100%;
         margin-bottom: 40px;
@@ -137,11 +140,11 @@
     }
     .about-section h2 {
         margin-bottom: 20px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .about-section p {
         margin-bottom: 20px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
         text-align: center; /* Center align text */
     }
     .about-button {
@@ -163,31 +166,33 @@
     }
     .contact-section h2 {
         margin-bottom: 20px;
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
     }
     .contact-section p {
-        color: var(--text-color);
+        color: var(--body-text-color); /* Use body text color */
         text-align: center; /* Center align text */
     }
     :root {
         --hero-bg-color: #e0e0e0;
-        --text-color: #e0e0e0;
+        --body-text-color: #000000; /* Default text color for light theme */
         --button-bg-color: #007bff;
         --button-text-color: #fff;
         --button-hover-bg-color: #0056b3;
         --card-bg-color: #f9f9f9;
         --card-text-color: #333;
         --icon-bg-color: #ccc;
+        --feature-text-color: #000000; /* Black for light theme */
     }
     .dark-theme :root {
         --hero-bg-color: #444;
-        --text-color:rgb(241, 241, 241);
+        --body-text-color: #ffffff; /* Default text color for dark theme */
         --button-bg-color: #007bff;
         --button-text-color: #fff;
         --button-hover-bg-color: #0056b3;
         --card-bg-color: #333;
-        --card-text-color:rgb(241, 241, 241);
+        --card-text-color: #ffffff;
         --icon-bg-color: #555;
+        --feature-text-color: #ffffff; /* White for dark theme */
     }
 </style>
 {% endblock %}
