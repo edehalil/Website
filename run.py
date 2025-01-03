@@ -1,5 +1,6 @@
 from app import app
 import os
+from flask import redirect
 
 if __name__ == "__main__":
     # run_with_ngrok(app)  # Ngrok ile çalıştır
